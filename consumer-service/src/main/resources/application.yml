@@ -1,0 +1,20 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: consumer-service
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    properties:
+      schema.registry.url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL:http://localhost:8081}
+    consumer:
+      group-id: order-consumer-group
+    topic:
+      orders: orders
+      dlq: orders-dlq
+
+logging:
+  level:
+    org.apache.kafka: INFO
+    com.kafka.consumer: DEBUG

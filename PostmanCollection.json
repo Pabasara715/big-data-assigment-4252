@@ -1,0 +1,148 @@
+{
+  "info": {
+    "name": "Kafka Order Processing - Demo Collection",
+    "description": "Collection of API calls for the Kafka Order Processing demo (producer, consumer, Schema Registry). Import into Postman or similar to run tests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "producerBaseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "consumerBaseUrl",
+      "value": "http://localhost:8082",
+      "type": "string"
+    },
+    {
+      "key": "schemaRegistry",
+      "value": "http://localhost:8085",
+      "type": "string"
+    },
+    {
+      "key": "defaultOrderId",
+      "value": "1001",
+      "type": "string"
+    },
+    {
+      "key": "defaultProduct",
+      "value": "Item1",
+      "type": "string"
+    },
+    {
+      "key": "defaultPrice",
+      "value": "99.99",
+      "type": "string"
+    },
+    {
+      "key": "subject",
+      "value": "orders-value",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Producer - Create Order (query params)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{producerBaseUrl}}/api/orders?orderId={{defaultOrderId}}&product={{defaultProduct}}&price={{defaultPrice}}",
+          "host": [
+            "{{producerBaseUrl}}"
+          ],
+          "path": [
+            "api",
+            "orders"
+          ],
+          "query": [
+            { "key": "orderId", "value": "{{defaultOrderId}}" },
+            { "key": "product", "value": "{{defaultProduct}}" },
+            { "key": "price", "value": "{{defaultPrice}}" }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Producer - Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{producerBaseUrl}}/api/orders/health",
+          "host": ["{{producerBaseUrl}}"],
+          "path": ["api","orders","health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consumer - Get Product Average",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{consumerBaseUrl}}/api/stats/average/{{defaultProduct}}",
+          "host": ["{{consumerBaseUrl}}"],
+          "path": ["api","stats","average","{{defaultProduct}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consumer - Get All Averages",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{consumerBaseUrl}}/api/stats/averages",
+          "host": ["{{consumerBaseUrl}}"],
+          "path": ["api","stats","averages"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consumer - Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{consumerBaseUrl}}/api/stats/health",
+          "host": ["{{consumerBaseUrl}}"],
+          "path": ["api","stats","health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Schema Registry - List Subjects",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{schemaRegistry}}/subjects",
+          "host": ["{{schemaRegistry}}"],
+          "path": ["subjects"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Schema Registry - Get Latest Schema for Subject",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{schemaRegistry}}/subjects/{{subject}}/versions/latest",
+          "host": ["{{schemaRegistry}}"],
+          "path": ["subjects","{{subject}}","versions","latest"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

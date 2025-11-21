@@ -100,6 +100,42 @@ echo "All product averages:"
 curl -s http://localhost:8082/api/stats/averages | jq . || curl -s http://localhost:8082/api/stats/averages
 echo ""
 
+# Test DLQ with malformed messages
+echo "Step 7: Testing Dead Letter Queue (DLQ) with malformed messages..."
+echo ""
+
+echo "Sending malformed message 1 (invalid JSON)..."
+echo "BadMessage1" | docker exec -i kafka kafka-console-producer --bootstrap-server kafka:29092 --topic orders
+echo "✓ Sent malformed message 1"
+echo ""
+
+sleep 2
+
+echo "Sending malformed message 2 (plain text)..."
+echo "This is not a valid Avro message" | docker exec -i kafka kafka-console-producer --bootstrap-server kafka:29092 --topic orders
+echo "✓ Sent malformed message 2"
+echo ""
+
+sleep 2
+
+echo "Sending malformed message 3 (invalid format)..."
+echo "{\"invalid\":\"data\"}" | docker exec -i kafka kafka-console-producer --bootstrap-server kafka:29092 --topic orders
+echo "✓ Sent malformed message 3"
+echo ""
+
+echo ""
+echo "Waiting for consumer to process and send to DLQ (10 seconds)..."
+sleep 10
+echo ""
+
+echo "Step 8: Checking Dead Letter Queue (orders-dlq)..."
+echo ""
+echo "Messages in orders-dlq topic:"
+docker exec -i kafka kafka-console-consumer --bootstrap-server kafka:29092 --topic orders-dlq --from-beginning --max-messages 10 --timeout-ms 5000 2>/dev/null || echo "No messages in DLQ (or timeout reached)"
+echo ""
+echo "✓ DLQ check completed"
+echo ""
+
 echo ""
 echo "=========================================="
 echo "Demo completed successfully!"
